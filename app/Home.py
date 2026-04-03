@@ -136,46 +136,138 @@ def _render_session_detail(flat_sessions: list[dict]) -> None:
             st.markdown(f"- {item}")
 
 
+
+
+def _derive_explorer_fields(df: pd.DataFrame) -> pd.DataFrame:
+    explorer = df.copy()
+
+    explorer["workout_format"] = explorer["format"].fillna("unknown").str.lower()
+    explorer.loc[~explorer["workout_format"].isin(["for_time", "amrap", "emom", "strength", "mixed"]), "workout_format"] = "unknown"
+    explorer.loc[
+        explorer["description"].fillna("").str.contains("chipper", case=False),
+        "workout_format",
+    ] = "chipper"
+    explorer.loc[
+        explorer["description"].fillna("").str.contains("interval", case=False),
+        "workout_format",
+    ] = "intervals"
+    explorer.loc[explorer["workout_format"] == "mixed", "workout_format"] = "unknown"
+
+    duration = explorer["duration_estimate"]
+    explorer["time_domain_code"] = "unknown"
+    explorer.loc[duration < 5, "time_domain_code"] = "<5"
+    explorer.loc[(duration >= 5) & (duration < 10), "time_domain_code"] = "5–10"
+    explorer.loc[(duration >= 10) & (duration < 20), "time_domain_code"] = "10–20"
+    explorer.loc[(duration >= 20) & (duration < 40), "time_domain_code"] = "20–40"
+    explorer.loc[duration >= 40, "time_domain_code"] = "40+"
+
+    explorer["energy_system_primary"] = "indéterminée"
+    explorer.loc[explorer["focus"].str.lower() == "engine", "energy_system_primary"] = "aérobie"
+    explorer.loc[
+        (explorer["duration_estimate"] < 10) & (explorer["difficulty_score"] >= 8),
+        "energy_system_primary",
+    ] = "anaérobie alactique"
+    explorer.loc[
+        (explorer["duration_estimate"] >= 5) & (explorer["duration_estimate"] <= 20) & (explorer["difficulty_score"] >= 7),
+        "energy_system_primary",
+    ] = "anaérobie lactique"
+    explorer.loc[explorer["focus"].str.lower() == "mixed", "energy_system_primary"] = "mixte"
+
+    explorer["rpe_inferred"] = (6 + (explorer["difficulty_score"].fillna(0) / 10) * 4).clip(6, 10).round(1)
+    explorer["year"] = pd.to_datetime(explorer["date"], errors="coerce").dt.year.astype("Int64")
+
+    return explorer
+
+
+def _movement_list(movements: str) -> list[str]:
+    if not movements:
+        return []
+    return [m.strip() for m in str(movements).split("|") if m.strip()]
+
+
 def _render_wod_explorer(df: pd.DataFrame) -> None:
     st.subheader("WOD Explorer")
-    with st.container(border=True):
-        f1, f2, f3, f4, f5 = st.columns(5)
-        with f1:
-            format_filter = st.selectbox("Format", options=["all"] + sorted(df["format"].dropna().unique().tolist()))
-        with f2:
-            focus_filter = st.selectbox("Focus", options=["all"] + sorted(df["focus"].dropna().unique().tolist()))
-        with f3:
-            equipment_filter = st.selectbox(
-                "Equipment",
-                options=["all"] + sorted(df["equipment"].dropna().unique().tolist()),
-            )
-        with f4:
-            duration_filter = st.slider("Max duration", min_value=8, max_value=60, value=30)
-        with f5:
-            benchmark_only = st.checkbox("Benchmark only")
+    explorer = _derive_explorer_fields(df)
 
-    filtered = df.copy()
-    if format_filter != "all":
-        filtered = filtered[filtered["format"] == format_filter]
-    if focus_filter != "all":
-        filtered = filtered[filtered["focus"] == focus_filter]
+    all_movements = sorted({m for raw in explorer["movements"].fillna("") for m in _movement_list(raw)})
+
+    with st.container(border=True):
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            workout_format = st.selectbox(
+                "workout_format",
+                options=["all", "for_time", "amrap", "emom", "strength", "chipper", "intervals", "unknown"],
+            )
+            time_domain_code = st.selectbox(
+                "time_domain_code",
+                options=["all", "<5", "5–10", "10–20", "20–40", "40+", "unknown"],
+            )
+        with c2:
+            energy_system_primary = st.selectbox(
+                "energy_system_primary",
+                options=["all", "aérobie", "anaérobie lactique", "anaérobie alactique", "mixte", "indéterminée"],
+            )
+            rpe_range = st.slider("rpe_inferred", min_value=6.0, max_value=10.0, value=(6.0, 10.0), step=0.1)
+        with c3:
+            movement_filters = st.multiselect("movements", options=all_movements)
+            year_options = ["all"] + [str(y) for y in sorted(explorer["year"].dropna().unique().tolist())]
+            year_filter = st.selectbox("year", options=year_options)
+
+    with st.container(border=True):
+        s1, s2 = st.columns(2)
+        with s1:
+            equipment_filter = st.selectbox(
+                "equipment",
+                options=["all"] + sorted(explorer["equipment"].dropna().unique().tolist()),
+            )
+        with s2:
+            focus_filter = st.selectbox(
+                "focus",
+                options=["all"] + sorted(explorer["focus"].dropna().unique().tolist()),
+            )
+
+    filtered = explorer.copy()
+    if workout_format != "all":
+        filtered = filtered[filtered["workout_format"] == workout_format]
+    if time_domain_code != "all":
+        filtered = filtered[filtered["time_domain_code"] == time_domain_code]
+    if energy_system_primary != "all":
+        filtered = filtered[filtered["energy_system_primary"] == energy_system_primary]
+
+    filtered = filtered[
+        filtered["rpe_inferred"].isna() |
+        ((filtered["rpe_inferred"] >= rpe_range[0]) & (filtered["rpe_inferred"] <= rpe_range[1]))
+    ]
+
+    if movement_filters:
+        filtered = filtered[
+            filtered["movements"].fillna("").apply(
+                lambda raw: any(m in _movement_list(raw) for m in movement_filters)
+            )
+        ]
+
+    if year_filter != "all":
+        filtered = filtered[filtered["year"] == int(year_filter)]
     if equipment_filter != "all":
         filtered = filtered[filtered["equipment"] == equipment_filter]
-    filtered = filtered[filtered["duration_estimate"] <= duration_filter]
-    if benchmark_only:
-        filtered = filtered[filtered["is_benchmark"] == True]
+    if focus_filter != "all":
+        filtered = filtered[filtered["focus"] == focus_filter]
 
     if filtered.empty:
         st.info("No WODs match these explorer filters.")
         return
 
     for _, wod in filtered.sort_values("date", ascending=False).iterrows():
+        movements = ", ".join(_movement_list(wod.get("movements", ""))[:4])
+        description = str(wod.get("description", ""))
+        excerpt = description if len(description) <= 120 else f"{description[:120].rstrip()}..."
         with st.container(border=True):
             st.markdown(f"**{wod['name']}**")
             st.caption(
-                f"{wod['format']} · {wod['focus']} · {wod['equipment']} · {int(wod['duration_estimate'])} min"
+                f"{wod['date']} · {wod['workout_format']} · {wod['time_domain_code']} · {wod['energy_system_primary']} · RPE {wod['rpe_inferred']}"
             )
-            st.write(wod["description"])
+            st.markdown(f"**Main movements:** {movements if movements else 'N/A'}")
+            st.write(excerpt)
 
 
 def _render_landing() -> None:
