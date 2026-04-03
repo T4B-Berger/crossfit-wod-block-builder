@@ -349,10 +349,10 @@ elif st.session_state.mode == "builder":
 
     with st.sidebar:
         st.markdown("## Block Inputs")
-        goal = st.selectbox("Goal", options=["engine", "strength", "gym", "general"])
-        level = st.selectbox("Level", options=["beginner", "intermediate", "advanced"])
-        sessions_per_week = st.selectbox("Sessions per week", options=[3, 4, 5], index=1)
-        equipment = st.selectbox("Equipment", options=["full_gym", "home_gym", "no_machine"])
+        goal = st.radio("Goal", options=["engine", "strength", "gym", "general"], horizontal=True)
+        level = st.radio("Level", options=["beginner", "intermediate", "advanced"], horizontal=True)
+        sessions_per_week = st.radio("Sessions per week", options=[3, 4, 5], horizontal=True, index=1)
+        equipment = st.radio("Equipment", options=["full_gym", "home_gym", "no_machine"], horizontal=True)
         max_duration = st.slider("Max duration (minutes)", min_value=8, max_value=60, value=20, step=1)
         generate = st.button("Generate block", type="primary", use_container_width=True)
 

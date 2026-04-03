@@ -183,6 +183,27 @@ small {
   outline: 1px solid var(--accent) !important;
 }
 
+
+[data-testid="stRadio"] label {
+  color: var(--text) !important;
+}
+
+[data-testid="stRadio"] [role="radiogroup"] label {
+  background: var(--control) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 999px !important;
+  padding: 0.2rem 0.6rem !important;
+}
+
+[data-testid="stRadio"] [role="radiogroup"] label:hover {
+  background: var(--control-hover) !important;
+  border-color: var(--accent) !important;
+}
+
+[data-testid="stRadio"] input:checked + div {
+  color: #ffffff !important;
+}
+
 /* Slider and checkbox readability */
 [data-testid="stSlider"] [data-testid="stTickBar"],
 [data-testid="stSlider"] div[data-baseweb="slider"] span {
