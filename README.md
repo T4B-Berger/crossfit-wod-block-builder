@@ -23,3 +23,13 @@ streamlit run app/Home.py
 
 This first step is only UI foundation and project structure.
 No real programming logic, dataset integration, LLM usage, or Airtable integration is included yet.
+
+## Local dataset (MVP)
+
+The MVP uses a local CSV dataset at:
+
+- `data/wod_dataset.csv`
+
+The dataset schema is defined in `app/utils/dataset_schema.py`, and loaded with:
+
+- `load_wod_dataset()` in `app/utils/data_loader.py`
