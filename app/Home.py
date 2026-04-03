@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
-from app.utils.data_loader import load_wod_dataset
-from app.utils.explanations import generate_block_explanation, generate_session_stimulus
-from app.utils.programming import generate_4_week_block
-from app.utils.theme import inject_theme
-from app.utils.warmup import generate_session_warmup
+from utils.data_loader import load_wod_dataset
+from utils.explanations import generate_block_explanation, generate_session_stimulus
+from utils.programming import generate_4_week_block
+from utils.theme import inject_theme
+from utils.warmup import generate_session_warmup
 
 st.set_page_config(
     page_title="WOD Block Builder",
