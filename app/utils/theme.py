@@ -9,11 +9,12 @@ APP_THEME = """
   --surface-2: #192445;
   --control: #1b2850;
   --control-hover: #243666;
-  --text: #e8eeff;
-  --muted: #b6c4ea;
+  --control-active: #2f457a;
+  --text: #f2f6ff;
+  --muted: #c0cdf0;
   --accent: #79a8ff;
   --accent-2: #a3ffd6;
-  --border: #314575;
+  --border: #3c548a;
 }
 
 .stApp {
@@ -80,7 +81,7 @@ section[data-testid="stSidebar"] {
   border-right: 1px solid var(--border);
 }
 
-/* Form control readability */
+/* Control labels and helper text */
 [data-testid="stSelectbox"] label,
 [data-testid="stSlider"] label,
 [data-testid="stCheckbox"] label,
@@ -90,6 +91,14 @@ section[data-testid="stSidebar"] {
   font-weight: 600;
 }
 
+[data-testid="stCaptionContainer"],
+[data-testid="stMarkdownContainer"] p small,
+[data-testid="stHelpIcon"],
+small {
+  color: var(--muted) !important;
+}
+
+/* Closed select field readability */
 [data-baseweb="select"] > div {
   background: var(--control) !important;
   border: 1px solid var(--border) !important;
@@ -101,29 +110,68 @@ section[data-testid="stSidebar"] {
   border-color: var(--accent) !important;
 }
 
+[data-baseweb="select"] > div:focus-within,
+[data-baseweb="select"] > div:active {
+  background: var(--control-active) !important;
+  border-color: var(--accent) !important;
+  outline: 2px solid rgba(121, 168, 255, 0.6) !important;
+  outline-offset: 1px;
+}
+
 [data-baseweb="select"] input,
 [data-baseweb="select"] span,
-[data-baseweb="select"] div {
+[data-baseweb="select"] div,
+[data-baseweb="select"] [aria-live="polite"] {
   color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+[data-baseweb="select"] input::placeholder {
+  color: var(--muted) !important;
+  opacity: 1 !important;
+}
+
+/* Open dropdown panel readability */
+[data-baseweb="popover"],
+[data-baseweb="menu"] {
+  background: var(--surface-2) !important;
 }
 
 [data-baseweb="popover"] [role="listbox"],
+[data-baseweb="menu"] ul,
 [data-baseweb="menu"] {
   background: var(--surface-2) !important;
   border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
 }
 
+[data-baseweb="popover"] [role="option"],
 [data-baseweb="menu"] li,
-[data-baseweb="menu"] div {
+[data-baseweb="menu"] div[role="option"] {
   color: var(--text) !important;
+  background: transparent !important;
 }
 
+[data-baseweb="popover"] [role="option"]:hover,
+[data-baseweb="popover"] [role="option"][aria-selected="true"],
+[data-baseweb="menu"] li:hover,
 [data-baseweb="menu"] li[aria-selected="true"],
-[data-baseweb="menu"] li:hover {
+[data-baseweb="menu"] div[role="option"]:hover,
+[data-baseweb="menu"] div[role="option"][aria-selected="true"] {
+  color: #ffffff !important;
   background: var(--control-hover) !important;
 }
 
-[data-testid="stSlider"] [data-testid="stTickBar"] {
+[data-baseweb="popover"] [role="option"]:focus,
+[data-baseweb="menu"] li:focus,
+[data-baseweb="menu"] div[role="option"]:focus {
+  background: var(--control-active) !important;
+  outline: 1px solid var(--accent) !important;
+}
+
+/* Slider and checkbox readability */
+[data-testid="stSlider"] [data-testid="stTickBar"],
+[data-testid="stSlider"] div[data-baseweb="slider"] span {
   color: var(--muted) !important;
 }
 
@@ -137,16 +185,19 @@ section[data-testid="stSidebar"] {
   background: var(--surface-2) !important;
 }
 
-[data-testid="stCheckbox"] input:focus + div,
-[data-baseweb="select"] > div:focus-within {
+[data-testid="stCheckbox"] input:focus + div {
   outline: 2px solid rgba(121, 168, 255, 0.6) !important;
   outline-offset: 1px;
 }
 
-[data-testid="stCaptionContainer"],
-[data-testid="stMarkdownContainer"] p small,
-[data-testid="stMarkdownContainer"] .st-emotion-cache-10trblm {
-  color: var(--muted) !important;
+/* Buttons, including mode switch, remain readable in dark theme */
+[data-testid="stButton"] button {
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+[data-testid="stButton"] button:hover {
+  border-color: var(--accent) !important;
 }
 </style>
 """
