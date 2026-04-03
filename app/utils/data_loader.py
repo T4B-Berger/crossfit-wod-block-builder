@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from app.utils.dataset_schema import DATASET_COLUMNS, DATASET_DTYPES
+from utils.dataset_schema import DATASET_COLUMNS, DATASET_DTYPES
 
 DEFAULT_DATASET_PATH = Path(__file__).resolve().parents[2] / "data" / "wod_dataset.csv"
 
