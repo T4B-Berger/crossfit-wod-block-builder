@@ -7,11 +7,13 @@ APP_THEME = """
   --bg: #0b1020;
   --surface: #121a2f;
   --surface-2: #192445;
+  --control: #1b2850;
+  --control-hover: #243666;
   --text: #e8eeff;
-  --muted: #9eb0db;
+  --muted: #b6c4ea;
   --accent: #79a8ff;
   --accent-2: #a3ffd6;
-  --border: #273459;
+  --border: #314575;
 }
 
 .stApp {
@@ -76,6 +78,75 @@ h1, h2, h3, h4, p, label, div { color: var(--text); }
 section[data-testid="stSidebar"] {
   background: linear-gradient(180deg, rgba(18, 26, 47, 0.96), rgba(11, 16, 32, 0.98));
   border-right: 1px solid var(--border);
+}
+
+/* Form control readability */
+[data-testid="stSelectbox"] label,
+[data-testid="stSlider"] label,
+[data-testid="stCheckbox"] label,
+[data-testid="stTextInput"] label,
+[data-testid="stMultiSelect"] label {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+[data-baseweb="select"] > div {
+  background: var(--control) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+[data-baseweb="select"] > div:hover {
+  background: var(--control-hover) !important;
+  border-color: var(--accent) !important;
+}
+
+[data-baseweb="select"] input,
+[data-baseweb="select"] span,
+[data-baseweb="select"] div {
+  color: var(--text) !important;
+}
+
+[data-baseweb="popover"] [role="listbox"],
+[data-baseweb="menu"] {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+}
+
+[data-baseweb="menu"] li,
+[data-baseweb="menu"] div {
+  color: var(--text) !important;
+}
+
+[data-baseweb="menu"] li[aria-selected="true"],
+[data-baseweb="menu"] li:hover {
+  background: var(--control-hover) !important;
+}
+
+[data-testid="stSlider"] [data-testid="stTickBar"] {
+  color: var(--muted) !important;
+}
+
+[data-testid="stSlider"] div[data-baseweb="slider"] [role="slider"] {
+  background: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(121, 168, 255, 0.25);
+}
+
+[data-testid="stCheckbox"] input + div {
+  border-color: var(--border) !important;
+  background: var(--surface-2) !important;
+}
+
+[data-testid="stCheckbox"] input:focus + div,
+[data-baseweb="select"] > div:focus-within {
+  outline: 2px solid rgba(121, 168, 255, 0.6) !important;
+  outline-offset: 1px;
+}
+
+[data-testid="stCaptionContainer"],
+[data-testid="stMarkdownContainer"] p small,
+[data-testid="stMarkdownContainer"] .st-emotion-cache-10trblm {
+  color: var(--muted) !important;
 }
 </style>
 """
