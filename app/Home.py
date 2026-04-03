@@ -24,14 +24,8 @@ st.caption("Deterministic MVP block generation from historical WOD data.")
 
 dataset = load_wod_dataset()
 
-with st.sidebar:
-    st.markdown("## Block Inputs")
-    goal = st.selectbox("Goal", options=["engine", "strength", "gym", "general"])
-    level = st.selectbox("Level", options=["beginner", "intermediate", "advanced"])
-    sessions_per_week = st.selectbox("Sessions per week", options=[3, 4, 5], index=1)
-    equipment = st.selectbox("Equipment", options=["full_gym", "home_gym", "no_machine"])
-    max_duration = st.slider("Max duration (minutes)", min_value=8, max_value=60, value=20, step=1)
-    generate = st.button("Generate block", type="primary", use_container_width=True)
+if "mode" not in st.session_state:
+    st.session_state.mode = None
 
 
 def _flatten_sessions(block: dict) -> list[dict]:
@@ -184,32 +178,69 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
             st.write(wod["description"])
 
 
+def _render_landing() -> None:
+    st.markdown("### Choose your mode")
+    st.caption("Start by selecting one focused workflow.")
+
+    left, right = st.columns(2, gap="large")
+    with left:
+        with st.container(border=True):
+            st.markdown("#### Build a 4-week block")
+            st.caption("Generate a deterministic block from your constraints.")
+            if st.button("Build a 4-week block", use_container_width=True, type="primary"):
+                st.session_state.mode = "builder"
+                st.rerun()
+    with right:
+        with st.container(border=True):
+            st.markdown("#### Explore the WOD library")
+            st.caption("Browse and filter existing WODs quickly.")
+            if st.button("Explore the WOD library", use_container_width=True):
+                st.session_state.mode = "explorer"
+                st.rerun()
+
+
 if dataset.empty:
     st.warning("No dataset available. Add data/wod_dataset.csv to generate a block.")
-elif generate:
-    block = generate_4_week_block(
-        df=dataset,
-        goal=goal,
-        level=level,
-        sessions_per_week=sessions_per_week,
-        equipment=equipment,
-        max_duration=max_duration,
-    )
+elif st.session_state.mode is None:
+    _render_landing()
+elif st.session_state.mode == "builder":
+    if st.button("Switch mode", key="switch_mode_builder"):
+        st.session_state.mode = None
+        st.rerun()
 
-    if not block["weeks"]:
-        st.info("No sessions found for this combination. Try a broader duration/equipment setting.")
+    with st.sidebar:
+        st.markdown("## Block Inputs")
+        goal = st.selectbox("Goal", options=["engine", "strength", "gym", "general"])
+        level = st.selectbox("Level", options=["beginner", "intermediate", "advanced"])
+        sessions_per_week = st.selectbox("Sessions per week", options=[3, 4, 5], index=1)
+        equipment = st.selectbox("Equipment", options=["full_gym", "home_gym", "no_machine"])
+        max_duration = st.slider("Max duration (minutes)", min_value=8, max_value=60, value=20, step=1)
+        generate = st.button("Generate block", type="primary", use_container_width=True)
+
+    if generate:
+        block = generate_4_week_block(
+            df=dataset,
+            goal=goal,
+            level=level,
+            sessions_per_week=sessions_per_week,
+            equipment=equipment,
+            max_duration=max_duration,
+        )
+
+        if not block["weeks"]:
+            st.info("No sessions found for this combination. Try a broader duration/equipment setting.")
+        else:
+            st.markdown(f"### 4-week block: {sessions_per_week} sessions/week, goal = {goal}")
+            st.info(generate_block_explanation(goal=goal, sessions_per_week=sessions_per_week))
+
+            _render_block_cards(block)
+            flat_sessions = _flatten_sessions(block)
+            _render_visualizations(flat_sessions)
+            _render_session_detail(flat_sessions)
     else:
-        st.markdown(f"### 4-week block: {sessions_per_week} sessions/week, goal = {goal}")
-        st.info(generate_block_explanation(goal=goal, sessions_per_week=sessions_per_week))
-
-        _render_block_cards(block)
-        flat_sessions = _flatten_sessions(block)
-        _render_visualizations(flat_sessions)
-        _render_session_detail(flat_sessions)
-
-    st.divider()
-    _render_wod_explorer(dataset)
+        st.info("Select inputs and click **Generate block**.")
 else:
-    st.info("Select inputs and click **Generate block**.")
-    st.divider()
+    if st.button("Switch mode", key="switch_mode_explorer"):
+        st.session_state.mode = None
+        st.rerun()
     _render_wod_explorer(dataset)
