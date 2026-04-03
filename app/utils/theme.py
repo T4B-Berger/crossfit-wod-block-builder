@@ -134,6 +134,17 @@ small {
   opacity: 1 !important;
 }
 
+[data-baseweb="tag"],
+[data-baseweb="tag"] * {
+  background: var(--control-active) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+[data-baseweb="select"] [data-baseweb="tag"] {
+  border-radius: 999px !important;
+}
+
 /* Open dropdown panel readability */
 [data-baseweb="popover"],
 [data-baseweb="menu"] {
