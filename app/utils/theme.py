@@ -14,6 +14,9 @@ APP_THEME = """
   --muted: #c0cdf0;
   --accent: #79a8ff;
   --accent-2: #a3ffd6;
+  --cta-red: #e14b5a;
+  --cta-red-hover: #f05b6b;
+  --cta-red-active: #c83f4f;
   --border: #3c548a;
 }
 
@@ -192,12 +195,23 @@ small {
 
 /* Buttons, including mode switch, remain readable in dark theme */
 [data-testid="stButton"] button {
-  border: 1px solid var(--border) !important;
-  color: var(--text) !important;
+  background: var(--cta-red) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
 [data-testid="stButton"] button:hover {
-  border-color: var(--accent) !important;
+  background: var(--cta-red-hover) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+[data-testid="stButton"] button:focus,
+[data-testid="stButton"] button:focus-visible,
+[data-testid="stButton"] button:active {
+  background: var(--cta-red-active) !important;
+  outline: 2px solid rgba(240, 91, 107, 0.55) !important;
+  outline-offset: 2px !important;
 }
 </style>
 """

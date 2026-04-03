@@ -296,7 +296,8 @@ def _render_landing() -> None:
         with st.container(border=True):
             st.markdown("#### Explore the WOD library")
             st.caption("Browse and filter existing WODs quickly.")
-            if st.button("Explore the WOD library", use_container_width=True):
+            if st.button("Explore the WOD library", use_container_width=True, type="primary"):
+
                 st.session_state.mode = "explorer"
                 st.rerun()
 
