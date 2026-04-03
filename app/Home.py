@@ -190,41 +190,53 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
     explorer = _derive_explorer_fields(df)
 
     all_movements = sorted({m for raw in explorer["movements"].fillna("") for m in _movement_list(raw)})
+    year_options = ["all"] + [str(y) for y in sorted(explorer["year"].dropna().unique().tolist())]
 
     with st.container(border=True):
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            workout_format = st.selectbox(
+        st.markdown("**Main filters**")
+        r1c1, r1c2 = st.columns(2)
+        with r1c1:
+            workout_format = st.radio(
                 "workout_format",
                 options=["all", "for_time", "amrap", "emom", "strength", "chipper", "intervals", "unknown"],
+                horizontal=True,
             )
-            time_domain_code = st.selectbox(
+        with r1c2:
+            time_domain_code = st.radio(
                 "time_domain_code",
                 options=["all", "<5", "5–10", "10–20", "20–40", "40+", "unknown"],
+                horizontal=True,
             )
-        with c2:
-            energy_system_primary = st.selectbox(
+
+        r2c1, r2c2, r2c3 = st.columns([2, 1, 1])
+        with r2c1:
+            energy_system_primary = st.radio(
                 "energy_system_primary",
                 options=["all", "aérobie", "anaérobie lactique", "anaérobie alactique", "mixte", "indéterminée"],
+                horizontal=True,
             )
-            rpe_range = st.slider("rpe_inferred", min_value=6.0, max_value=10.0, value=(6.0, 10.0), step=0.1)
-        with c3:
-            movement_filters = st.multiselect("movements", options=all_movements)
-            year_options = ["all"] + [str(y) for y in sorted(explorer["year"].dropna().unique().tolist())]
-            year_filter = st.selectbox("year", options=year_options)
-
-    with st.container(border=True):
-        s1, s2 = st.columns(2)
-        with s1:
-            equipment_filter = st.selectbox(
-                "equipment",
-                options=["all"] + sorted(explorer["equipment"].dropna().unique().tolist()),
-            )
-        with s2:
-            focus_filter = st.selectbox(
+        with r2c2:
+            focus_filter = st.radio(
                 "focus",
                 options=["all"] + sorted(explorer["focus"].dropna().unique().tolist()),
+                horizontal=True,
             )
+        with r2c3:
+            equipment_filter = st.radio(
+                "equipment",
+                options=["all"] + sorted(explorer["equipment"].dropna().unique().tolist()),
+                horizontal=True,
+            )
+
+    with st.container(border=True):
+        st.markdown("**Additional filters**")
+        a1, a2, a3 = st.columns(3)
+        with a1:
+            rpe_range = st.slider("rpe_inferred", min_value=6.0, max_value=10.0, value=(6.0, 10.0), step=0.1)
+        with a2:
+            movement_filters = st.multiselect("movements", options=all_movements)
+        with a3:
+            year_filter = st.selectbox("year", options=year_options)
 
     filtered = explorer.copy()
     if workout_format != "all":
@@ -235,8 +247,8 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
         filtered = filtered[filtered["energy_system_primary"] == energy_system_primary]
 
     filtered = filtered[
-        filtered["rpe_inferred"].isna() |
-        ((filtered["rpe_inferred"] >= rpe_range[0]) & (filtered["rpe_inferred"] <= rpe_range[1]))
+        filtered["rpe_inferred"].isna()
+        | ((filtered["rpe_inferred"] >= rpe_range[0]) & (filtered["rpe_inferred"] <= rpe_range[1]))
     ]
 
     if movement_filters:
