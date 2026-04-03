@@ -189,7 +189,6 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
     st.subheader("WOD Explorer")
     explorer = _derive_explorer_fields(df)
 
-    all_movements = sorted({m for raw in explorer["movements"].fillna("") for m in _movement_list(raw)})
     year_options = ["all"] + [str(y) for y in sorted(explorer["year"].dropna().unique().tolist())]
 
     with st.container(border=True):
@@ -230,13 +229,13 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
 
     with st.container(border=True):
         st.markdown("**Additional filters**")
-        a1, a2, a3 = st.columns(3)
+        a1, a2 = st.columns([1, 2])
         with a1:
             rpe_range = st.slider("rpe_inferred", min_value=6.0, max_value=10.0, value=(6.0, 10.0), step=0.1)
         with a2:
-            movement_filters = st.multiselect("movements", options=all_movements)
-        with a3:
-            year_filter = st.selectbox("year", options=year_options)
+            year_filter = st.radio("year", options=year_options, horizontal=True)
+
+        movement_search = st.text_input("search movement", placeholder="e.g. pull_up, thruster, row")
 
     filtered = explorer.copy()
     if workout_format != "all":
@@ -251,11 +250,10 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
         | ((filtered["rpe_inferred"] >= rpe_range[0]) & (filtered["rpe_inferred"] <= rpe_range[1]))
     ]
 
-    if movement_filters:
+    if movement_search.strip():
+        search_value = movement_search.strip().lower()
         filtered = filtered[
-            filtered["movements"].fillna("").apply(
-                lambda raw: any(m in _movement_list(raw) for m in movement_filters)
-            )
+            filtered["movements"].fillna("").str.lower().str.contains(search_value, regex=False)
         ]
 
     if year_filter != "all":
