@@ -224,6 +224,18 @@ small {
   outline: 2px solid rgba(240, 91, 107, 0.55) !important;
   outline-offset: 2px !important;
 }
+
+.movement-pill {
+  display: inline-block;
+  margin: 0.12rem 0.2rem 0.12rem 0;
+  padding: 0.28rem 0.62rem;
+  border-radius: 999px;
+  background: var(--cta-red-active);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.82rem;
+}
+
 </style>
 """
 

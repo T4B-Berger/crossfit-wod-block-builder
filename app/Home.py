@@ -185,6 +185,40 @@ def _movement_list(movements: str) -> list[str]:
     return [m.strip() for m in str(movements).split("|") if m.strip()]
 
 
+
+
+def _render_movement_selector(all_movements: list[str]) -> list[str]:
+    state_key = "explorer_selected_movements"
+    if state_key not in st.session_state:
+        st.session_state[state_key] = []
+
+    selected = list(st.session_state[state_key])
+
+    search = st.text_input("Search movement", placeholder="Type to narrow movement chips", key="movement_search")
+    visible = [m for m in all_movements if search.lower() in m.lower()]
+
+    st.markdown("**Movement selector**")
+    if selected:
+        selected_markup = " ".join([f"<span class='movement-pill'>✓ {m}</span>" for m in selected])
+        st.markdown(selected_markup, unsafe_allow_html=True)
+
+    chip_cols = st.columns(4)
+    for idx, movement in enumerate(visible[:40]):
+        with chip_cols[idx % 4]:
+            is_selected = movement in selected
+            label = f"✓ {movement}" if is_selected else movement
+            if st.button(label, key=f"movement_chip_{movement}", use_container_width=True):
+                if is_selected:
+                    selected.remove(movement)
+                else:
+                    selected.append(movement)
+                st.session_state[state_key] = selected
+                st.rerun()
+
+    st.session_state[state_key] = selected
+    return selected
+
+
 def _render_wod_explorer(df: pd.DataFrame) -> None:
     st.subheader("WOD Explorer")
     explorer = _derive_explorer_fields(df)
@@ -236,7 +270,7 @@ def _render_wod_explorer(df: pd.DataFrame) -> None:
         with a2:
             year_filter = st.radio("year", options=year_options, horizontal=True)
 
-        movement_filters = st.multiselect("movements", options=all_movements)
+        movement_filters = _render_movement_selector(all_movements)
 
     filtered = explorer.copy()
     if workout_format != "all":
