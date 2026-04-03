@@ -1,0 +1,26 @@
+wod_id,date,name,description,format,time_domain,focus,equipment,level_hint,movements,duration_estimate,difficulty_score,score_type,is_benchmark
+WOD-001,2024-01-03,Fran 35kg,21-15-9 thrusters and pull-ups,for_time,short,gym,full_gym,intermediate,"thruster_35kg|pull_up",8,8,time,true
+WOD-002,2024-01-06,Engine Builder 1,20 min AMRAP of row and burpees,amrap,medium,engine,full_gym,beginner,"row_250m|burpee",20,5,rounds,false
+WOD-003,2024-01-09,Home Grind,15 min AMRAP dumbbell snatch and sit-ups,amrap,short,mixed,home_gym,beginner,"dumbbell_snatch_15kg|sit_up",15,4,rounds,false
+WOD-004,2024-01-11,Barbell Ladder,EMOM 16 building clean and jerk load,emom,medium,strength,full_gym,advanced,"clean_and_jerk",16,8,load,false
+WOD-005,2024-01-14,Open Style Sprint,For time 3 rounds run and wall balls,for_time,short,engine,no_machine,intermediate,"run_400m|wall_ball_9kg",14,6,time,false
+WOD-006,2024-01-17,Gym Skill Density,12 min AMRAP toes-to-bar and handstand push-ups,amrap,short,gym,no_machine,advanced,"toes_to_bar|handstand_push_up",12,8,reps,false
+WOD-007,2024-01-20,Long Aerobic Piece,30 min mixed machine intervals,mixed,long,engine,full_gym,intermediate,"bike_1000m|row_500m|ski_erg_500m",30,6,calories,false
+WOD-008,2024-01-24,Back Squat 5x5,Progressive sets across 5 working sets,strength,medium,strength,full_gym,intermediate,"back_squat",35,7,load,false
+WOD-009,2024-01-27,Minimal Gear Chipper,For time 50-40-30-20-10 double unders and push-ups,for_time,medium,mixed,home_gym,beginner,"double_under|push_up",22,6,time,false
+WOD-010,2024-01-30,Core Engine EMOM,EMOM 18 with shuttle runs and plank hold,emom,medium,engine,no_machine,beginner,"shuttle_run_20m|plank_hold",18,4,reps,false
+WOD-011,2024-02-03,Grace 60kg,30 clean and jerks for time,for_time,short,strength,full_gym,advanced,"clean_and_jerk_60kg",7,9,time,true
+WOD-012,2024-02-06,Strict Gym Push,5 rounds strict pull-up and ring dip volume,mixed,medium,gym,no_machine,advanced,"strict_pull_up|ring_dip",18,7,reps,false
+WOD-013,2024-02-10,Threshold Rowing,4 x 1000 m row with controlled rest,mixed,medium,engine,full_gym,intermediate,"row_1000m",24,6,time,false
+WOD-014,2024-02-13,Deadlift Triples,Build to heavy triple deadlift,strength,short,strength,full_gym,advanced,"deadlift",25,8,load,false
+WOD-015,2024-02-16,Bodyweight Burner,AMRAP 14 air squats box step-ups sit-ups,amrap,short,engine,home_gym,beginner,"air_squat|box_step_up|sit_up",14,3,rounds,false
+WOD-016,2024-02-20,Chipper 25,For time 5-movement mixed volume piece,mixed,medium,mixed,full_gym,intermediate,"kettlebell_swing_24kg|burpee|row_500m|front_squat_40kg|toes_to_bar",25,7,time,false
+WOD-017,2024-02-24,Pull Strength EMOM,EMOM 20 alternating weighted pull and hollow hold,emom,medium,gym,no_machine,advanced,"weighted_pull_up|hollow_hold",20,8,reps,false
+WOD-018,2024-02-28,Bike and Lunges,For time intervals bike and walking lunges,for_time,medium,engine,full_gym,beginner,"bike_2000m|walking_lunge",19,5,time,false
+WOD-019,2024-03-02,Snatch Complex,Every 2 min snatch complex,emom,short,strength,full_gym,advanced,"power_snatch|overhead_squat",18,8,load,false
+WOD-020,2024-03-06,No Machine Test,20 min AMRAP run and kettlebell swings,amrap,medium,mixed,no_machine,intermediate,"run_400m|kettlebell_swing_24kg",20,6,rounds,false
+WOD-021,2024-03-10,Cindy,20 min AMRAP pull-ups push-ups air squats,amrap,medium,gym,no_machine,intermediate,"pull_up|push_up|air_squat",20,6,rounds,true
+WOD-022,2024-03-13,Front Rack Focus,5 sets front squat plus split jerk complex,strength,medium,strength,full_gym,intermediate,"front_squat|split_jerk",30,8,load,false
+WOD-023,2024-03-17,Home EMOM 12,EMOM 12 with dumbbell thrusters and mountain climbers,emom,short,mixed,home_gym,beginner,"dumbbell_thruster_12kg|mountain_climber",12,4,reps,false
+WOD-024,2024-03-20,Interval Sprint,10 rounds 45s work 45s rest shuttle and burpees,mixed,short,engine,no_machine,intermediate,"shuttle_run_20m|burpee",15,7,reps,false
+WOD-025,2024-03-24,Hero Style Starter,For time run kettlebell swings and pull-ups,for_time,long,mixed,home_gym,advanced,"run_1600m|kettlebell_swing_24kg|pull_up",32,8,time,false
